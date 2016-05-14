@@ -4,30 +4,28 @@ var fs = require('fs');
 var favicon = require('serve-favicon');
 var port = process.env.PORT || 3000
 var app = express();
+var mongoose = require('mongoose');
 app.use(favicon(__dirname + '/android-icon-192x192.png'));
-
 app.use(morgan('short'));
+
+mongoose.connect("mongodb://admin:admin@ds021922.mlab.com:21922/shorty");
 
 app.get('/', function(req,res){
 	fs.createReadStream(__dirname + '/index.html').pipe(res);
 })
 
-
-app.get('/data', function(req,res){
-	var ip = req.headers['x-forwarded-for'] || 
-    	req.connection.remoteAddress || 
-    	req.socket.remoteAddress ||
-    	req.connection.socket.remoteAddress;
-    var lang = req.headers['accept-language'].substring(0,5);
-    var os = req.headers['user-agent'].match(/\((.+?)\)/,"")[1];
-    var obj = {
-    	ip : ip,
-    	language: lang,
-    	os: os
+app.get('/:web', function(req,res){
+    var web = req.params.web
+    if(web.substr(0,5)==='https' ||web.substr(0,5)==='http:'){
+        var data = {
+            original: req.params.web,
+            shorty: "shawty"
+        }
+        res.json(data);
     }
-    res.json(obj);
+    res.send('please use proper url-formatting with "http://www.example.com/" or "https://www.example.com/"')
+    
 })
-
 
 app.listen(port, function(){
 	console.log('runnin on ' + port)
