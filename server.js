@@ -65,16 +65,16 @@ app.post('/api/shorten', function(req, res){
 });
 
 app.get('/:encoded_id', function(req, res){
+
   var base58Id = req.params.encoded_id;
+
   var id = base58.decode(base58Id);
 
   // check if url already exists in database
   Url.findOne({_id: id}, function (err, doc){
     if (doc) {
-      // found an entry in the DB, redirect the user to their destination
       res.redirect(doc.long_url);
     } else {
-      // nothing found, take 'em home
       res.redirect(config.webhost);
     }
   });
@@ -85,5 +85,5 @@ app.get('/:encoded_id', function(req, res){
 
 app.listen(port, function(){
 	console.log('runnin on ' + port)
-});
+}); 
 

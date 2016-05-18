@@ -26,3 +26,4 @@ function decode(str){
 
 module.exports.encode = encode;
 module.exports.decode = decode;
+
