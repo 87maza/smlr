@@ -9,18 +9,16 @@ var bodyParser = require('body-parser')
 var mongoose = require('mongoose');
 var config = require('./config');
 // base58 for encoding and decoding functions
-var base58 = require('./base58.js');
+var base58 = require('./base58');
 
 // grab the url model
 var Url = require('./shortyModel');
 
-
-
 app.use(favicon(__dirname + '/android-icon-192x192.png'));
 app.use(morgan('short'));
 
-mongoose.connect("mongodb://admin:admin@ds021922.mlab.com:21922/shorty");
-// mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
+// mongoose.connect("mongodb://admin:admin@ds021922.mlab.com:21922/shorty");
+mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
 
 
 
@@ -37,6 +35,7 @@ app.post('/api/shorten', function(req, res){
   // check if url already exists in database
   Url.findOne({long_url: longUrl}, function (err, doc){
     if (doc){
+        console.log(doc);
       // base58 encode the unique _id of that document and construct the short URL
       shortUrl = config.webhost + base58.encode(doc._id);
 
@@ -65,16 +64,18 @@ app.post('/api/shorten', function(req, res){
 });
 
 app.get('/:encoded_id', function(req, res){
-
   var base58Id = req.params.encoded_id;
-
+  console.log(base58Id);
   var id = base58.decode(base58Id);
-
+  console.log(base58Id);
   // check if url already exists in database
   Url.findOne({_id: id}, function (err, doc){
+    
     if (doc) {
+      // found an entry in the DB, redirect the user to their destination
       res.redirect(doc.long_url);
     } else {
+      // nothing found, take 'em home
       res.redirect(config.webhost);
     }
   });
