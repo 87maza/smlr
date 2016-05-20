@@ -20,16 +20,15 @@ app.use(morgan('short'));
 // mongoose.connect("mongodb://admin:admin@ds021922.mlab.com:21922/shorty");
 mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
 
-
-
-// handles JSON bodies
 app.use(bodyParser.json());
-// handles URL encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.post('/api/shorten', function(req, res){
-  var longUrl = req.body.url;
+  var longUrl = req.body.url.replace(/ /g, '');
+    if(longUrl.substr(0,4) !== 'http:' || longUrl.substr(0,4)!== 'https'){
+        longUrl = "http://" + longUrl;
+    }
   var shortUrl = '';
 
   // check if url already exists in database
