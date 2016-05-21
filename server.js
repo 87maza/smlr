@@ -8,10 +8,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose');
 var config = require('./config');
-// base58 for encoding and decoding functions
 var base58 = require('./base58');
 
-// grab the url model
 var Url = require('./shortyModel');
 
 app.use(favicon(__dirname + '/android-icon-192x192.png'));
@@ -34,15 +32,10 @@ app.post('/api/shorten', function(req, res){
   // check if url already exists in database
   Url.findOne({long_url: longUrl}, function (err, doc){
     if (doc){
-        console.log(doc);
-      // base58 encode the unique _id of that document and construct the short URL
       shortUrl = config.webhost + base58.encode(doc._id);
-
-      // since the document exists, we return it without creating a new entry
       res.send({'shortUrl': shortUrl});
     } else {
-      // The long URL was not found in the long_url field in our urls
-      // collection, so we need to create a new entry:
+      // The long URL was not found in the long_url field in our url
       var newUrl = Url({
         long_url: longUrl
       });
@@ -52,10 +45,8 @@ app.post('/api/shorten', function(req, res){
         if (err){
           console.log(err);
         }
-
         // construct the short URL
         shortUrl = config.webhost + base58.encode(newUrl._id);
-
         res.send({'shortUrl': shortUrl});
       });
     }
@@ -74,7 +65,6 @@ app.get('/:encoded_id', function(req, res){
       // found an entry in the DB, redirect the user to their destination
       res.redirect(doc.long_url);
     } else {
-      // nothing found, take 'em home
       res.redirect(config.webhost);
     }
   });
