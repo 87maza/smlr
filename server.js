@@ -23,10 +23,12 @@ app.use(express.static('public'));
 
 app.post('/api/shorten', function(req, res){
   //adds http to urls
-
-    if(longUrl.substr(0,4) !== 'http:' || longUrl.substr(0,4)!== 'https'){
+  var longUrl = req.body.url.replace(/ /g, '');
+    if(longUrl.substr(0,5) !== 'http:'){
         longUrl = "http://" + longUrl;
+        console.log(longUrl)
     }
+
   var shortUrl = '';
 
   // check if url already exists in database
