@@ -23,7 +23,7 @@ app.use(express.static('public'));
 
 app.post('/api/shorten', function(req, res){
   //adds http to urls
-  var longUrl = req.body.url.replace(/ /g, '');
+
     if(longUrl.substr(0,4) !== 'http:' || longUrl.substr(0,4)!== 'https'){
         longUrl = "http://" + longUrl;
     }
