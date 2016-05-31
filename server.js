@@ -14,8 +14,8 @@ var Url = require('./shortyModel');
 app.use(favicon(__dirname + '/android-icon-192x192.png'));
 app.use(morgan('short'));
 
-// mongoose.connect("mongodb://admin:admin@ds021922.mlab.com:21922/shorty");
-mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
+mongoose.connect("mongodb://admin:admin@ds021922.mlab.com:21922/shorty");
+// mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
