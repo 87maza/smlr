@@ -6,7 +6,6 @@ var port = process.env.PORT || 3000
 var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser')
-var mongoose = require('mongoose');
 var config = require('./config');
 var base58 = require('./base58');
 
@@ -23,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.post('/api/shorten', function(req, res){
+  //adds http to urls
   var longUrl = req.body.url.replace(/ /g, '');
     if(longUrl.substr(0,4) !== 'http:' || longUrl.substr(0,4)!== 'https'){
         longUrl = "http://" + longUrl;
